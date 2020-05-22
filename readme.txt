@@ -7,9 +7,8 @@ License: GPLv2 or later
 Made for the test 
 
 == Description ==
+You need CMB2 plugin installed
 
 == Installation ==
-
-Upload the Akismet plugin to your blog, activate it, and then enter your Akismet.com API key.
 
 
