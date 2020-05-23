@@ -11,13 +11,18 @@
 
 require 'vendor/autoload.php';
 
+
 use EventCalendar\Submenu;
 use EventCalendar\SubmenuPage;
+use EventCalendar\FieldsAdmin;
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+if ( ! defined( 'WPINC' ) ) 
+{
+    die;
+}
 
-
-require plugin_dir_path( __FILE__ ) . 'includes/source-fields-notices.php';
+// require plugin_dir_path( __FILE__ ) . 'includes/source-fields-notices.php';
 
 function page_template($single_template) 
 {
@@ -28,17 +33,17 @@ function page_template($single_template)
         $single_template = plugin_dir_path( __FILE__ )  . '/page.php' ;
     }
 	//echo get_post_meta($post->ID, 'yourprefix_demo_textdate', true);
-	
     return $single_template;
 }
+// return nineten twenty template page and content 
 add_filter( 'single_template', 'page_template' );
 
 //* Add Support for Testimonial Specific Custom Metaboxes (cmb2)
-if( !class_exists("CMB2") )
-{
-	// require_once( plugin_dir_path(__FILE__)."includes/source-fields-metaboxes.php" );
-	require_once( plugin_dir_path(__FILE__)."includes/source-fields-metaboxes-v2.php" );
-}
+// if( !class_exists("CMB2") )
+// {
+// 	// require_once( plugin_dir_path(__FILE__)."includes/source-fields-metaboxes.php" );
+// 	require_once( plugin_dir_path(__FILE__)."includes/source-fields-metaboxes-v2.php" );
+// }
 
 // Load Custom CMB2 Stylesheet in Admin Post Edit Screen
 add_action('admin_enqueue_scripts', 'pb_cmb2_custom_style');
@@ -51,10 +56,7 @@ function pb_cmb2_custom_style( $hook )
 
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) 
-{
-    die;
-}
+
 
 add_action('plugins_loaded', 'language_init');
 function language_init() {
@@ -68,15 +70,16 @@ function add_submenu_admin_and_settings()
 {
     
     $plugin = new Submenu( new SubmenuPage() );
-   
     $plugin->init();
+
+    $fields = new FieldsAdmin('Description','Start','End','Recurrence','Cost', 'Venue');
+    $fields->fieldsAdminInit();
    
 }
 
 add_action('admin_menu', 'event_calendar_admin'); 
 function event_calendar_admin()
 {
-    
     add_menu_page( esc_html__('Event','event-calendar'), esc_html__('Event','event-calendar'), 'manage_options', 'event-calendar', 'admin_init' );         
 }
 add_action( 'init', 'lc_custom_post_calendar' );
@@ -110,7 +113,8 @@ function lc_custom_post_calendar() {
     'show_in_admin_bar' => true,
     'show_in_nav_menus' => true,
     'has_archive'       => true,
-    'query_var'         => 'schedule'
+    'query_var'         => 'schedule',
+    'taxonomies'          => array('topics', 'category' ),
   );
  
   // Call the actual WordPress function
@@ -121,5 +125,5 @@ function lc_custom_post_calendar() {
 
 function admin_init()
 {
-    require_once('example-functions.php');
+    echo "<h2>First Menu</h2>";
 }
