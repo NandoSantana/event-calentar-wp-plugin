@@ -21,17 +21,12 @@ class FieldsAdmin {
         $this->venue = $venue;
     }
 
-
     public function fieldsAdminInit()
     {
         add_action('admin_notices', array( $this,'pb_source_fields_showAdminMessages'));
         add_action( 'cmb2_admin_init', array( $this,'custom_post_fields_admin') );
     }
 
-    
-    
-
-// Create a warning message in the Admin area
     public function pb_source_fields_showAdminMessages()
     {
 
