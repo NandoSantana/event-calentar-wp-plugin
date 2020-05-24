@@ -5,7 +5,6 @@
   "autoload": {
       "psr-4": {
           "EventCalendar\\": "src/"
-      },
-      "Cmb2\\": "../cmb2/init.php"
+      }
   }
 }
