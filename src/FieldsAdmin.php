@@ -39,17 +39,14 @@ class FieldsAdmin {
         include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
         // Check if CMB2 plugin is active
-        if(!class_exists( 'cmb2' ))
-        {
+        if(!class_exists( 'cmb2' )){
         // Wraning message
             $plugin_messages[] = 'The <strong>Source Fields</strong> plugin requires you to install the <strong>CMB2</strong> plugin in order to fully use the plugins features. Please install and activate <strong>CMB2</strong> before activating this plugin</a>.';
         }
         // If not, display warning message
-        if(count($plugin_messages) > 0)
-        {
+        if(count($plugin_messages) > 0){
             echo '<div id="message" class="error">';
-                foreach($plugin_messages as $message)
-                {
+                foreach($plugin_messages as $message){
                     echo '<p>'.$message.'</p>';
                 }
             echo '</div>';
