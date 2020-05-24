@@ -20,4 +20,9 @@ class SubmenuPage {
        
     }
 
+    function admin_init()
+    {
+        echo "<h2>First Menu</h2>";
+    }
+
 }
