@@ -12,6 +12,8 @@ class Front {
 
         add_filter( 'single_template', array($this, 'page_template') );
 
+        add_filter( 'archive_template', array($this, 'archive') );
+
         add_action('plugins_loaded', array($this, 'language_init') );
     }
 
@@ -33,15 +35,16 @@ class Front {
     }
     // return nineten twenty template page and content 
 
+    public function archive($archive) 
+    {
+        return $archive = plugin_dir_path( __FILE__ )  . 'parts/archive.php' ;
+    }
+
     public function language_init() 
     {
         $plugin_rel_path = basename( dirname( __FILE__ ) ) . '/languages'; /* Relative to WP_PLUGIN_DIR */
         load_plugin_textdomain( 'event-calendar', false, $plugin_rel_path );
 
     }
-
-
-
-
 
 }
