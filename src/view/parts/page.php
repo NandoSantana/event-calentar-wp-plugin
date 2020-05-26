@@ -18,7 +18,7 @@ get_header();
 			
 			<?php
 
-				echo get_post_meta($post->ID, 'yourprefix_demo_textdate',true);
+				
 				
 				include plugin_dir_path(__FILE__) .'/content-page.php';
 
