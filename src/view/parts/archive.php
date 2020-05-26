@@ -89,7 +89,7 @@ $urlBase =  WP_PLUGIN_URL."/event-calendar/src/view/parts";
 			$i++;
 		}
 	
-		echo $receive = json_encode($array, JSON_UNESCAPED_SLASHES);
+		$receive = json_encode($array, JSON_UNESCAPED_SLASHES);
 
 	?>
 	<script language="javascript">
