@@ -11,14 +11,7 @@
  * 
 */
 
- *, ::after, ::before {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-html, body {
-    padding: 0;
-    margin: 0;
-}
+
 body {
     font-family: 'Source Sans Pro';
 }
@@ -29,7 +22,7 @@ input:focus, textarea:focus, button:focus {
     position: relative;
     background-color: #fbfbfb;
     color: #5a5a5a;
-    width: 100%;
+    width: 60%;
     -webkit-box-shadow: 0 10px 50px -20px #8773c1;
             box-shadow: 0 10px 50px -20px #8773c1;
     margin: 0 auto;
@@ -88,6 +81,8 @@ input:focus, textarea:focus, button:focus {
     margin: 0;
     font-size: 30px;
     display: inline-block;
+    top: 16px;
+    position: relative;
 }
 .calendar-sidebar > .calendar-year > button.icon-button {
     display: inline-block;
@@ -464,6 +459,10 @@ button.icon-button > span.chevron-arrow-right {
 
 /* 1024 */
 @media only screen and (max-width: 1280px) {
+    span.chevron-arrow-left {
+        top: -4px;
+        position: relative;
+    }
     .calendar-inner {
         padding: 50px 20px 70px 20px;
         max-width: calc(100% - 580px);
@@ -662,6 +661,9 @@ button.icon-button > span.chevron-arrow-right {
 
 /* xs */
 @media screen and (max-width: 425px) {
+    .evo-calendar{
+        width: 90%;
+    }
     .calendar-sidebar {
         width: 100%;
     }
@@ -679,13 +681,15 @@ button.icon-button > span.chevron-arrow-right {
         position: relative;
         padding: 10px 20px;
         text-align: center;
-        background-color: #8773c1;
+        background-color: #0c8ac5;
         -webkit-box-shadow: 0 3px 8px -3px rgba(53, 43, 80, 0.65);
                 box-shadow: 0 3px 8px -3px rgba(53, 43, 80, 0.65);
     }
     .calendar-sidebar > .calendar-year > button.icon-button {
         width: 14px;
         height: 14px;
+        top: -11px;
+        position: relative;
     }
     .calendar-sidebar > .calendar-year > button.icon-button > span {
         border-right-width: 3px;
@@ -700,7 +704,7 @@ button.icon-button > span.chevron-arrow-right {
         width: 100%;
         height: calc(100% - 43px);
         overflow-y: auto;
-        background-color: #8773c1;
+        background-color: #0073aa;
         -webkit-transform: translateY(0);
             -ms-transform: translateY(0);
                 transform: translateY(0);
@@ -758,8 +762,11 @@ button.icon-button > span.chevron-arrow-right {
     }
     .calendar-sidebar > span#sidebarToggler,
     #eventListToggler {
-        width: 40px;
-        height: 40px;
+        /* width: 40px;
+        height: 40px; */
+        width: 43px;
+        height: 53px;
+        margin: 3px;
     }
     button.icon-button > span.chevron-arrow-right {
         border-right-width: 4px;

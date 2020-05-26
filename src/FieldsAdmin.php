@@ -76,13 +76,14 @@ class FieldsAdmin {
             'desc' => esc_html__( '', 'cmb2' ),
             'id'   => 'datetime_timestamp',
             'type' => 'text_datetime_timestamp',
+            'date_format' => 'm/d/Y',
             'time_format' => 'H:i',
         ) );
         
         $cmb->add_field( 
             array(
-                'name'       => 'Start - All days',
-                'id'         => '_is_public',
+                'name'       => 'Start - All day',
+                'id'         => '_start_all_day',
                 'type'       => 'checkbox'
             ) 
         );
@@ -92,13 +93,14 @@ class FieldsAdmin {
             'desc' => esc_html__( '', 'cmb2' ),
             'id'   => 'datetime_timestamp_end',
             'type' => 'text_datetime_timestamp',
+            'date_format' => 'm/d/Y',
             'time_format' => 'H:i',
         ) );
 
         $cmb->add_field( 
             array(
-                'name'       => 'End - All days',
-                'id'         => '_alldays_end',
+                'name'       => 'End - All day',
+                'id'         => '_allday_end',
                 'type'       => 'checkbox'
             ) 
         );

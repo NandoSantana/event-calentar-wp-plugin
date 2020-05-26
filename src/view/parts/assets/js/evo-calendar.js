@@ -488,18 +488,81 @@
         if (eventListEl.children().length > 0) eventListEl.empty();
         if (_.options.calendarEvents) {
             for (var i = 0; i < _.options.calendarEvents.length; i++) {
+                
+              //  console.log('Minha data: Dia ', _.options.calendarEvents[i]);
+              //  console.log('Active dateEnd ', _.options.calendarEvents[i].dateEnd);
+
+              //  console.log('Minha data: mes ', _.options.calendarEvents[i].everyMounth);
+                //console.log('Minha data: Ano ', _.options.calendarEvents[i].everyYear);
+                console.log('mounth length  ',  _.monthLength);
+
+                var start = _.formatDate(_.options.calendarEvents[i].date, 'dd');
+                var allEnd = _.formatDate(_.options.calendarEvents[i].dateEnd, 'dd' );
+                
+                
                 if(_.$active.date === _.options.calendarEvents[i].date) {
-                    hasEventToday = true;
-                    _.addEventList(_.options.calendarEvents[i])
+                //if(_.$active.date === _.options.calendarEvents[i].date) {
+                    // if (_.options.calendarEvents[i].every == 'none') {
+                        
+                    //      hasEventToday = false;
+                    //      //return;
+                    // }
+                     hasEventToday = false;
+                    _.addEventList(_.options.calendarEvents[i]);
                 }
-                else if (_.options.calendarEvents[i].everyYear) {
-                    var d = _.formatDate(_.$active.date, 'mm/dd');
-                    var dd = _.formatDate(_.options.calendarEvents[i].date, 'mm/dd');
-                    if(d==dd) {
+                else if (_.options.calendarEvents[i].every == 'daily') {
+                    var dDayCurrent1 = _.formatDate(_.$active.date, 'dd');
+                    var dayStart1 = _.formatDate(_.options.calendarEvents[i].date, 'dd');
+                    
+                    var dayEnd1 = _.formatDate(_.options.calendarEvents[i].dateEnd, 'dd');
+                    var dMesCurrent1 = _.formatDate(_.$active.date, 'mm');
+                    var mesEnd1 = _.formatDate(_.options.calendarEvents[i].dateEnd, 'mm');
+                    var mesStart1 = _.formatDate(_.options.calendarEvents[i].date, 'mm');
+                   
+                   
+                    
+                    //console.log('day active',day);
+
+                    console.log('daily',_.options.calendarEvents[i]);
+                    if( mesStart1 == dMesCurrent1  && dDayCurrent1 >= dayStart1 && dayEnd1 >= dDayCurrent1 ) {
                         hasEventToday = true;
-                        _.addEventList(_.options.calendarEvents[i])
+                       _.addEventList(_.options.calendarEvents[i])
+                      //  _.addEventList(_.options.calendarEvents[i].dateEnd)
+
                     }
                 }
+                else if (_.options.calendarEvents[i].every == 'monthly') {
+                    
+                    var m = _.formatDate(_.$active.date, 'dd');
+                    var me = _.formatDate(_.$active.date, 'mm');
+                    var mm = _.formatDate(_.options.calendarEvents[i].date, 'dd');
+
+                    var mensalEnd = _.formatDate(_.options.calendarEvents[i].dateEnd, 'dd');
+                    var mme = _.formatDate(_.options.calendarEvents[i].date, 'mm');
+
+
+                    console.log('me mensal', _.$active.date);
+                    console.log('me  mensal active',m);
+                    if( mme == me  && m >= mm && mensalEnd >= m  ) {
+                    // if(m==mm && me >= mme  ) {
+                        hasEventToday = true;
+
+                       _.addEventList(_.options.calendarEvents[i])
+                    }
+                }
+                else if (_.options.calendarEvents[i].every === 'yearly') {
+                    var d = _.formatDate(_.$active.date, 'mm/dd');
+                    var dd = _.formatDate(_.options.calendarEvents[i].date, 'mm/dd');
+                    if(d==dd ) {
+                        hasEventToday = true;
+                      //  _.addEventList(_.options.calendarEvents[i])
+                   
+
+
+                    }
+                }
+               
+                
             };
         }
         // IF: no event for the selected date
@@ -516,12 +579,13 @@
     // v1.0.0 - Add single event to event list
     EvoCalendar.prototype.addEventList = function(event_data) {
         var _ = this, markup;
+        console.log('every:',event_data.every);
         var eventListEl = _.$elements.eventEl.find('.event-list');
         if (eventListEl.find('[data-event-index]').length === 0) eventListEl.empty();
         _.$active.events.push(event_data);
         markup = '<div class="event-container" role="button" data-event-index="'+(event_data.id)+'">';
         markup += '<div class="event-icon"><div class="event-bullet-'+event_data.type+'"></div></div>';
-        markup += '<div class="event-info"><p>'+_.limitTitle(event_data.name)+'</p></div>';
+        markup += '<div class="event-info"><p>'+_.limitTitle(event_data.name)+'</p> <span>Start: '+_.limitTitle(event_data.date)+'</span> - <span>'+_.limitTitle(event_data.dateEnd)+'</span></div>';
         markup += '</div>';
         eventListEl.append(markup);
 
@@ -625,9 +689,17 @@
     EvoCalendar.prototype.addEventIndicator = function(active_date, type) {
         var _ = this, htmlToAppend, thisDate = _.$elements.innerEl.find('[data-date-val="'+active_date+'"]');
 
+        // var _ = this, htmlToAppend, thisDate = _.$elements.innerEl.find('[data-date-val="'+active_date+'"]');
+
+        console.log('this',thisDate);
+        // if (thisDate.find('span.event-indicator').length === 0) {
+        //     thisDate.append('<span class="event-indicator"> </span>');
+        // }
         if (thisDate.find('span.event-indicator').length === 0) {
-            thisDate.append('<span class="event-indicator"></span>');
+            thisDate.append('<span class="event-indicator"> </span>');
         }
+        
+        console.log('find', thisDate.find('span.event-indicator'));
 
         if (thisDate.find('span.event-indicator > .type-bullet > .type-'+type).length === 0) {
             htmlToAppend = '<div class="type-bullet"><div class="type-'+type+'"></div></div>';
@@ -665,25 +737,119 @@
     // v1.0.0 - Build event indicator on each date
     EvoCalendar.prototype.buildEventIndicator = function() {
         var _ = this;
-        
+        console.log('Meu This: ',this.options);
         // prevent duplication
         _.$elements.innerEl.find('.calendar-day > day > .event-indicator').empty();
-        
+        console.log('quantidade eventos: ', _.options.calendarEvents.length);
         for (var i = 0; i < _.options.calendarEvents.length; i++) {
             for (var x = 0; x < _.monthLength; x++) {
                 // each day
                 var active_date = _.formatDate(_.$label.months[_.$active.month] +' '+ (x + 1) +' '+ _.$active.year, _.options.format);
+                var start = _.formatDate(_.options.calendarEvents[i].date, 'dd');
+                var allEnd = _.formatDate(_.options.calendarEvents[i].dateEnd, 'dd' );
+                console.log(start);
+                console.log(allEnd);
                 
-                if(active_date==_.options.calendarEvents[i].date) {
-                    _.addEventIndicator(active_date, _.options.calendarEvents[i].type);
+                console.log('Active date:', active_date );
+                console.log('tipo', _.options.calendarEvents[i].type)
+
+                // if(_.options.calendarEvents[i].every == 'none' ) {
+                if(active_date == _.options.calendarEvents[i].date ) {
+                        console.log('data1',active_date);
+                        // if(_.options.calendarEvents[i].every == 'none' ) {
+                        // //     return;
+                        // // //_.addEventIndicator(_.options.calendarEvents[i].dateEnd, _.options.calendarEvents[i].type);
+                        // }
+                         _.addEventIndicator(active_date, _.options.calendarEvents[i].type);
+
+                    }
+                // else if(_.options.calendarEvents[i].every == 'none' ) {
+                // //if(active_date == _.options.calendarEvents[i].date ) {
+                //     console.log('Every None',active_date);
+                    
+                //     var activeNone = _.formatDate(active_date, 'dd');
+                //     var mesNone = _.formatDate(active_date, 'mm');
+                //     var noneDate = _.formatDate(_.options.calendarEvents[i].date, 'dd');
+
+                //     var noneEnd = _.formatDate(_.options.calendarEvents[i].dateEnd, 'dd');
+                //     var startNone = _.formatDate(_.options.calendarEvents[i].date, 'mm');
+
+
+                //     console.log('me mensal', _.$active.date);
+                //     console.log('me  mensal active',m);
+                //     if( startNone == mesNone  && activeNone >= noneDate && noneEnd >= activeNone  ) {
+                //        _.addEventIndicator(start, _.options.calendarEvents[i].type);
+                    
+                //     }
+                // }
+                else if (_.options.calendarEvents[i].every == 'daily') {
+                    var dDayCurrent = _.formatDate(active_date, 'dd');
+                    var dayStart = _.formatDate(_.options.calendarEvents[i].date, 'dd');
+
+
+                    var dMesCurrent = _.formatDate(active_date, 'mm');
+                    var dayEnd = _.formatDate(_.options.calendarEvents[i].dateEnd, 'dd');
+                    var mesStart = _.formatDate(_.options.calendarEvents[i].date, 'mm');
+
+                    // var dDay = _.formatDate(active_date, 'mm');
+                    // var day = _.formatDate(_.options.calendarEvents[i].date, 'mm');
+                    // var dayday = _.formatDate(_.options.calendarEvents[i].dateEnd, 'mm');
+
+                    // var allEnd = _.formatDate(_.options.calendarEvents[i].dateEnd, 'mm' );
+                    if( mesStart == dMesCurrent  && dDayCurrent >= dayStart && dayEnd >= dDayCurrent ) {
+                        console.log('teste',  _.options.calendarEvents[i].type);
+                        _.addEventIndicator(active_date, _.options.calendarEvents[i].type);
+                      //  _.addEventIndicator(_.options.calendarEvents[i].dateEnd, _.options.calendarEvents[i].type);
+                        
+                    }
+                    
                 }
-                else if (_.options.calendarEvents[i].everyYear) {
+                else if (_.options.calendarEvents[i].every == 'monthly') {
+                    // var m = _.formatDate(active_date, 'dd');
+                    // var me = _.formatDate(active_date, 'mm');
+                    // var mm = _.formatDate(_.options.calendarEvents[i].date, 'dd');
+                    // var mme = _.formatDate(_.options.calendarEvents[i].date, 'mm');
+                    console.log('me', me);
+                    console.log('me active',m);
+
+                    var m = _.formatDate(active_date, 'dd');
+                    var me = _.formatDate(active_date, 'mm');
+                    var mm = _.formatDate(_.options.calendarEvents[i].date, 'dd');
+
+                    var mensalEnd = _.formatDate(_.options.calendarEvents[i].dateEnd, 'dd');
+                    var mme = _.formatDate(_.options.calendarEvents[i].date, 'mm');
+
+
+                    console.log('me mensal', _.$active.date);
+                    console.log('me  mensal active',m);
+                    if( mme == me  && m >= mm && mensalEnd >= m  ) {
+                        if( _.options.calendarEvents[i].every = 'daily'){
+                            _.addEventIndicator(active_date, _.options.calendarEvents[i].type);
+
+                        }
+                   // if(m==mm && me >= mme) {
+                        _.addEventIndicator(active_date, _.options.calendarEvents[i].type);
+                      //  _.addEventIndicator(_.options.calendarEvents[i].dateEnd, _.options.calendarEvents[i].type);
+
+                    }
+                }
+                else if (_.options.calendarEvents[i].every == 'yearly') {
                     var d = _.formatDate(active_date, 'mm/dd');
                     var dd = _.formatDate(_.options.calendarEvents[i].date, 'mm/dd');
-                    if(d==dd) {
+
+                    if(d==dd ) {
                         _.addEventIndicator(active_date, _.options.calendarEvents[i].type);
                     }
                 }
+
+                // else if (_.options.calendarEvents[i].date != _.options.calendarEvents[i].dateEnd ) {
+                //     var y = _.formatDate(active_date, 'dd/yyyy');
+                //     var yy = _.formatDate(_.options.calendarEvents[i].date, 'dd/yyyy');
+                //     if(y==yy) {
+                //         _.addEventIndicator(active_date, _.options.calendarEvents[i].type);
+                //     }
+                // }
+                
             }
         }
     };

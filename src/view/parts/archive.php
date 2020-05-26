@@ -46,44 +46,151 @@ $urlBase =  WP_PLUGIN_URL."/event-calendar/src/view/parts";
 	</div><!-- #primary -->
     <!-- jQuery -->
     <script src="<?php echo $urlBase; ?>/assets/js/jquery-1.12.4.min.js"></script>
-    <script src="<?php echo $urlBase; ?>/assets/js/evo-calendar.min.js"></script>
+    <script src="<?php echo $urlBase; ?>/assets/js/evo-calendar.js"></script>
+	<?php
 
-	<script>
-		var settingValue =[
-      {
+		$post = get_posts(
+			array('posts_per_page' => '', 'post_type' => 'schedule', 'orderby' => 'post_date', 'order' => 'ASC', 'post_status'=> 'publish')
+		);
+		$i = 0;
+		foreach($post as $last_post) {
+			
+			$ids[$i] = $last_post->ID;
+			$titles[$i] = $last_post->post_title;
+			$thumbnail[$i] = get_the_post_thumbnail_url( $last_post->ID );
+			$link[$i] = get_permalink($last_post->ID , false);
+			$date[$i] = get_post_meta($last_post->ID, 'datetime_timestamp', true);
+			$start_all_day[$i] = get_post_meta($last_post->ID, '_start_all_day', true);
+			$dateEnd[$i] = get_post_meta($last_post->ID, 'datetime_timestamp_end', true);
+			$end_all_day[$i] = get_post_meta($last_post->ID, '_allday_end', true);
+
+			$recurrence[$i] = get_post_meta($last_post->ID, 'yourprefix_demo_select_Recurrence', true);
+			
+			
+
+
+			$descricao[$i] = get_post_meta($last_post->ID, 'datetime_timestamp_end', true);
+
+			$array[$i] = array(
+				'id'=>$ids[$i],
+				'name' =>$titles[$i],
+				'link' => $link[$i],
+				'date' => date('m/d/Y',$date[$i]),
+				'hour' => date('H:i ',$date[$i]),
+				'start_all_day' => $start_all_day[$i],
+				'dateEnd' => date('m/d/Y',$dateEnd[$i]),
+				'hourEnd' => date('H:i',$dateEnd[$i]),
+
+				'end_all_day' => $end_all_day[$i],
+				'type' => 'event',
+				'every' => $recurrence[$i]
+				
+			);
+			$i++;
+		}
+	
+		echo $receive = json_encode($array, JSON_UNESCAPED_SLASHES);
+
+	?>
+	<script language="javascript">
+		var receiveData = <?=$receive;?>;
+		var settingValue = [
+	{
       // Event's ID (required)
-      id: '1s',
+		id: '1s',
       // Event name (required)
-       name: "New Year",
+		name: "New Year",
       // Event date (required)
-       date: "1/1/2020",
+		date: "12/31/2020",
+		dateEnd:'1/1/2020',
       // Event type (required)
-       type: "holiday",
-      // Same event every year (optional)
-       everyYear: true
-      },
-      { id: '1s2',
-       name: "Vacation Leave",
-       date: "2/13/2020",
-       type: "event"
-       }
+		type: "event",
+	  // Same event every year (optional)
+		every: 'none',
+	  
+	},
+	{ 
+		  
+		  id: '1s2s',
+		  name: "Terminar front",
+		  date: "4/10/2020",
+		  dateEnd:'4/12/2020',
+		  type: "event",
+		  every: 'none',
+		 
+	},
+	{ 
+		  
+		id: '1s2',
+		name: "Vacation Leave",
+		date: "2/11/2020",
+		dateEnd:'2/16/2020',
+		type: "event",
+		every: 'monthly',
+		
+	},
+	{ 
+		  
+		  id: '1s2d',
+		  name: "Estudar",
+		  date: "3/10/2020",
+		  dateEnd:'3/30/2020',
+		  type: "event",
+		  every: 'daily',
+		  
+	  },
+
+	  { 
+		  
+		  id: '1s2ds',
+		  name: "Estudar Logica",
+		  date: "1/10/2020",
+		  dateEnd:'2/20/2020',
+		  type: "event",
+		  every: 'monthly',
+		  
+	  },
+
+	  { 
+		  
+		  id: '1s2ds1',
+		  name: "Comer sagu",
+		  date: "1/21/2020",
+		  dateEnd:'1/25/2020',
+		  type: "holiday",
+		  every: 'monthly',
+		  
+	  },
+	
     ];
 		$('#calendar').evoCalendar({
 			language: 'en',// Supported language: en, es, de..
-			calendarEvents: settingValue,
+			calendarEvents: receiveData,//receiveData, //settingValue,
 			// theme: 'Royal Navy',
-			 'todayHighlight': true, 
+			'todayHighlight': true, 
 			'sidebarToggler': true,
-			 'eventDisplayDefault': true,
+			'sidebarDisplayDefault': true,
+			'eventDisplayDefault': true,
 			'eventListToggler': true,
-			'format': 'MM dd, yyyy'
+			'format': 'mm/dd/yyyy',
+			'todayHighlight': true
 			
 		});
 		$('#calendar').on('selectEvent', function(event, activeEvent) {
 		     // code here...
-			console.log(event);
-			alert('olá');
+			// console.log(event);
+			console.log(activeEvent.link);
+			window.location.href = activeEvent.link;
+			// alert('olá');
 		});
+		$('#calendar').on('selectDate', function(event, newDate, oldDate) {
+     // code here...
+			console.log(event);
+			console.log(newDate);
+			console.log(oldDate);
+
+		});
+			
 	</script>
 <?php
 
